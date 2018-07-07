@@ -35,9 +35,20 @@ export default class GameController {
     @Body() changes: Partial<Game>
   ) {
     const game = await Game.findOne(id)
+    const moves = (board1, board2) => 
+      board1
+        .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
+        .reduce((a, b) => a.concat(b))
+        .length
+
     if (!game) throw new NotFoundError('Cannot find page')
+
     if(changes.color && !this.colors.includes(changes.color)) {
-      throw new BadRequestError("You chose the wrong color!")
+      throw new BadRequestError("Wrong color!")
+    }
+
+    if(changes.board && moves(changes.board, game.board) > 1 ) {
+      throw new BadRequestError("Cheater! Only one move per turn allowed.")
     }
     return Game.merge(game, changes).save()
   }

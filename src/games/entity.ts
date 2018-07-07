@@ -20,7 +20,7 @@ export default class Game extends BaseEntity {
     @IsString()
     name: string
   
-    @Column('json', {nullable:false, default: JSON.stringify(defaultBoard)})
+    @Column('json', {nullable:false, default: defaultBoard})
     @IsString()
     board: JSON
 
