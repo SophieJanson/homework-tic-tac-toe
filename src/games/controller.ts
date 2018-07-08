@@ -1,6 +1,6 @@
 import Game from './entity'
 import { JsonController, Get, Post, Put, Param, Body, NotFoundError, BadRequestError, HttpCode } from 'routing-controllers'
-import {defaultBoard, colors, moves} from '../lib/gameconfig'
+import {defaultBoard, colors, randomColor, moves} from '../lib/gameconfig'
 
 @JsonController()
 export default class GameController {
@@ -14,16 +14,15 @@ export default class GameController {
   @Post('/games')
   addGame(
     @HttpCode(201)
-    @Body() body :string
+    @Body() body :JSON
   ) {
-    const color = colors[Math.floor(Math.random() * 4) - 1],
-          name = JSON.parse(JSON.stringify(body)).name,
-          game = new Game()
+    const name = JSON.parse(JSON.stringify(body)).name,
+      game = new Game()
     if(!name) throw new BadRequestError("Missing required parameter 'name'.")
 
     game.name = name
     game.board = JSON.parse(JSON.stringify(defaultBoard))
-    game.color = color
+    game.color = randomColor
     return game.save()
   }
 
