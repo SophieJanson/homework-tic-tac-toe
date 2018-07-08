@@ -1,5 +1,5 @@
 import Game from './entity'
-import { JsonController, Get, Post, Put, Param, Body, NotFoundError, BadRequestError, HttpCode } from 'routing-controllers'
+import { JsonController, Get, Post, Put, Param, Body, NotFoundError, BadRequestError, HttpCode, BodyParam } from 'routing-controllers'
 import {defaultBoard, colors, randomColor, moves} from '../lib/gameconfig'
 
 @JsonController()
@@ -14,15 +14,15 @@ export default class GameController {
   @Post('/games')
   addGame(
     @HttpCode(201)
-    @Body() body :JSON
+    @BodyParam('name', {required: true}) name :string
   ) {
-    const name = JSON.parse(JSON.stringify(body)).name,
-      game = new Game()
+    // const name = JSON.parse(JSON.stringify(body)).name,
+    const game = new Game()
     if(!name) throw new BadRequestError("Missing required parameter 'name'.")
-
+    console.log(typeof name)
     game.name = name
     game.board = JSON.parse(JSON.stringify(defaultBoard))
-    game.color = randomColor
+    game.color = randomColor()
     return game.save()
   }
 
@@ -34,7 +34,7 @@ export default class GameController {
     const game = await Game.findOne(id)
     if (!game) throw new NotFoundError('Cannot find page')
 
-    if(changes.id) throw new BadRequestError("Cannot change ID.")
+    if(changes.id && changes.id !== id) throw new BadRequestError("Cannot change ID.")
     if(changes.color && !colors.includes(changes.color)) {
       throw new BadRequestError("Wrong color!")
     }
