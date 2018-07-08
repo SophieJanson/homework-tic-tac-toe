@@ -1,29 +1,27 @@
 import Game from './entity'
-import { JsonController, Get, Post, Put, Param, Body, NotFoundError, BadRequestError } from 'routing-controllers'
+import { JsonController, Get, Post, Put, Param, Body, NotFoundError, BadRequestError, HttpCode } from 'routing-controllers'
+import {defaultBoard, colors, moves} from '../lib/gameconfig'
 
 @JsonController()
 export default class GameController {
   @Get('/games')
-  async getGames(
-  ) {
+  async getGames() {
     return {
       games: await Game.find()
     }
   }
-  colors = ['red', 'blue', 'green', 'yellow', 'magenta'] 
 
   @Post('/games')
   addGame(
+    @HttpCode(201)
     @Body() body :string
   ) {
-    const defaultBoard = [
-      ['o', 'o', 'o'],
-      ['o', 'o', 'o'],
-      ['o', 'o', 'o']
-    ]
-    const color = this.colors[Math.floor(Math.random() * 4) - 1]
-    let game = new Game()
-    game.name = JSON.parse(JSON.stringify(body)).name
+    const color = colors[Math.floor(Math.random() * 4) - 1],
+          name = JSON.parse(JSON.stringify(body)).name,
+          game = new Game()
+    if(!name) throw new BadRequestError("Missing required parameter 'name'.")
+
+    game.name = name
     game.board = JSON.parse(JSON.stringify(defaultBoard))
     game.color = color
     return game.save()
@@ -35,15 +33,10 @@ export default class GameController {
     @Body() changes: Partial<Game>
   ) {
     const game = await Game.findOne(id)
-    const moves = (board1, board2) => 
-      board1
-        .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
-        .reduce((a, b) => a.concat(b))
-        .length
-
     if (!game) throw new NotFoundError('Cannot find page')
 
-    if(changes.color && !this.colors.includes(changes.color)) {
+    if(changes.id) throw new BadRequestError("Cannot change ID.")
+    if(changes.color && !colors.includes(changes.color)) {
       throw new BadRequestError("Wrong color!")
     }
 

@@ -1,15 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
-import { IsString } from 'class-validator'
-
-const defaultBoard = [
-	['o', 'o', 'o'],
-	['o', 'o', 'o'],
-	['o', 'o', 'o']
-]
-
-const colors = ['red', 'blue', 'green', 'yellow', 'magenta'] 
-const color = colors[Math.floor(Math.random() * 4) - 1]
+import { IsString, IsJSON, Matches } from 'class-validator'
 
 @Entity()
 export default class Game extends BaseEntity {
@@ -20,11 +11,12 @@ export default class Game extends BaseEntity {
     @IsString()
     name: string
   
-    @Column('json', {nullable:false, default: defaultBoard})
-    @IsString()
-    board: JSON
+    @Column('json', {nullable:false})
+    @IsJSON()
+    board: JSON 
 
-    @Column('text', {nullable:false, default: color})
+    @Column('text', {nullable:false})
     @IsString()
+    @Matches(/(red|blue|green|yellow|magenta)/i)
     color: string
 }

@@ -22,7 +22,7 @@ yes - 3. Add an endpoint `POST /games` for which the only input is a name. The c
 yes - 4. Add an endpoint `PUT /games/:id` or `PATCH /games/:id` that allows to overwrite one or more fields of the game. E.g. calling `PUT /games` with JSON body `{ "name": "new name" }` should update the name, same for color and board (not for id). 
 yes - 5. When a **game is changed** using the endpoint you made in #4 and the color field is updated, make sure (validate) that the color is one of these colors: red, blue, green, yellow, magenta
 yes - 6. When a **game starts**, your app should set the board to an empty board. The board is a two dimensional array that contains three arrays with three times the letter 'o'. (see code below\*)
-7. When a **game is changed** and the board field is updated, make sure only 1 move is made per request. That means that only one element out of the 9 can be changed into something else. You can use the function below to count the number of moves between two boards. If somebody tries to make more moves, return a `HTTP 400 Bad Request` response. If everything is fine, update the board field of the game.  \*\* 
+yes - 7. When a **game is changed** and the board field is updated, make sure only 1 move is made per request. That means that only one element out of the 9 can be changed into something else. You can use the function below to count the number of moves between two boards. If somebody tries to make more moves, return a `HTTP 400 Bad Request` response. If everything is fine, update the board field of the game.  \*\* 
 
 
 \* the start position of the board in code:
