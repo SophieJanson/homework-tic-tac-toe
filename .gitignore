@@ -1,3 +1,4 @@
-node 
-nodemon
-node_modules
+/nodemon.json
+/node_modules
+/.gitignore
+
