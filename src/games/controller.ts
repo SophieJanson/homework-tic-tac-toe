@@ -18,7 +18,7 @@ export default class GameController {
   ) {
     // const name = JSON.parse(JSON.stringify(body)).name,
     const game = new Game()
-    if(!name) throw new BadRequestError("Missing required parameter 'name'.")
+    // if(!name) throw new BadRequestError("Missing required param 'name'.")
     console.log(typeof name)
     game.name = name
     game.board = JSON.parse(JSON.stringify(defaultBoard))
@@ -32,7 +32,7 @@ export default class GameController {
     @Body() changes: Partial<Game>
   ) {
     const game = await Game.findOne(id)
-    if (!game) throw new NotFoundError('Cannot find page')
+    if (!game) throw new NotFoundError('Cannot find game.')
 
     if(changes.id && changes.id !== id) throw new BadRequestError("Cannot change ID.")
     if(changes.color && !colors.includes(changes.color)) {

@@ -7,15 +7,15 @@ export default class Game extends BaseEntity {
   @PrimaryGeneratedColumn()
     id?: number
 
-  @Column('text', {nullable: false})
+  @Column('text')
   @IsString()
   name: string
   
-  @Column('json', {nullable: false})
+  @Column('json')
   @IsJSON()
   board: JSON 
 
-  @Column('text', {nullable: false})
+  @Column('text')
   @IsString()
   color: string
 }
